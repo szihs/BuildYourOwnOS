@@ -1,5 +1,6 @@
 #include "gdt.h"
 #include "interrupts.h"
+#include "keyboard.h"
 #include "types.h"
 #define SCREEN_W 80
 #define SCREEN_H 25
@@ -61,8 +62,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
     printf("Hello Again ~ From Custom Kernel");
   }
   GlobalDescriptorTable gdt;
-
   InterruptManager interrupts(&gdt);
+  KeyboardDriver keyboard(&interrupts);
 
   interrupts.Activate();
   while (1)
