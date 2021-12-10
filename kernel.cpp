@@ -1,6 +1,6 @@
 #include "gdt.h"
+#include "interrupts.h"
 #include "types.h"
-
 #define SCREEN_W 80
 #define SCREEN_H 25
 
@@ -62,6 +62,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   }
   GlobalDescriptorTable gdt;
 
+  InterruptManager interrupts(&gdt);
+
+  interrupts.Activate();
   while (1)
     ;
 }
