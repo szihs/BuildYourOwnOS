@@ -108,7 +108,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber,
     printf(foo);
   }
 
-  if (interruptNumber <= 0x20 && interruptNumber < 0x30) {
+  if (0x20 <= interruptNumber && interruptNumber < 0x30) {
     picMasterCommand.Write(0x20);
     if (0x28 <= interruptNumber)
       picSlaveCommand.Write(0x20);
