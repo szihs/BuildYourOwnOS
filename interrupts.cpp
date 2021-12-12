@@ -11,7 +11,10 @@ InterruptHandler::~InterruptHandler() {
   if (interruptManager->handlers[interruptNumber] == this)
     interruptManager->handlers[interruptNumber] = 0;
 }
-uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) { return esp; }
+uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) {
+  printf("InterruptHandler::Handleinterrupt base\n");
+  return esp;
+}
 
 InterruptManager::GateDescriptor
     InterruptManager::interruptDescriptorTable[N_ENTRIES];
@@ -56,6 +59,8 @@ InterruptManager::InterruptManager(GlobalDescriptorTable *gdt)
       0x20, CodeSegment, &HandleInterruptRequest0x00, 0, IDT_INTERRUPT_GATE);
   SetInterruptDescriptorTableEntry(
       0x21, CodeSegment, &HandleInterruptRequest0x01, 0, IDT_INTERRUPT_GATE);
+  SetInterruptDescriptorTableEntry(
+      0x2C, CodeSegment, &HandleInterruptRequest0x0C, 0, IDT_INTERRUPT_GATE);
 
   picMasterCommand.Write(0x11);
   picSlaveCommand.Write(0x11);

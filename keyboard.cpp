@@ -18,6 +18,7 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager)
 KeyboardDriver::~KeyboardDriver() {}
 
 uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp) {
+//  printf("KeyboardDriver::HandleInterrupt\n");
   uint8_t key = dataport.Read();
   if (key < 0x80) {
     switch (key) {
