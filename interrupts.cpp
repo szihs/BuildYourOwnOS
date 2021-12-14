@@ -11,9 +11,13 @@ InterruptHandler::~InterruptHandler() {
   if (interruptManager->handlers[interruptNumber] == this)
     interruptManager->handlers[interruptNumber] = 0;
 }
-uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) {
-  printf("InterruptHandler::Handleinterrupt base\n");
+
+uint32_t InterruptHandler::doHandleInterrupt(uint32_t esp) {
+  printf("Base InterruptHandler::doHandleinterrupt base\n");
   return esp;
+}
+uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) {
+  return doHandleInterrupt(esp);
 }
 
 InterruptManager::GateDescriptor

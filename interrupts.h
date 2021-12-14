@@ -15,8 +15,11 @@ protected:
   InterruptHandler(uint8_t interruptNumber, InterruptManager *InterruptManager);
   ~InterruptHandler();
 
+private:
+  virtual uint32_t doHandleInterrupt(uint32_t esp);
+
 public:
-  virtual uint32_t HandleInterrupt(uint32_t esp);
+  uint32_t HandleInterrupt(uint32_t esp);
 };
 
 class InterruptManager {
@@ -64,7 +67,6 @@ public:
   static void HandleInterruptRequest0x00();
   static void HandleInterruptRequest0x01();
   static void HandleInterruptRequest0x0C();
-
 };
 
 #endif

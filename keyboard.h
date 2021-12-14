@@ -8,11 +8,11 @@ class KeyboardDriver : public InterruptHandler {
 private:
   Port8Bit dataport;
   Port8Bit commandport;
+  virtual uint32_t doHandleInterrupt(uint32_t esp);
 
 public:
   KeyboardDriver(InterruptManager *manager);
   ~KeyboardDriver();
-  virtual uint32_t HandleInterrupt(uint32_t esp);
 };
 
 #endif

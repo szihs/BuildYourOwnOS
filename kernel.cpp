@@ -58,10 +58,7 @@ extern "C" void callConstructors() {
 }
 
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
-  for (int i = 0; i < 26; i++) {
-    printf("Hello ~ From Custom Kernel\n");
-    printf("Hello Again ~ From Custom Kernel");
-  }
+  printf("Hello ~ From Custom Kernel\n");
   GlobalDescriptorTable gdt;
   InterruptManager interrupts(&gdt);
   KeyboardDriver keyboard(&interrupts);
