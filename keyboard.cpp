@@ -18,7 +18,6 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager)
 KeyboardDriver::~KeyboardDriver() {}
 
 uint32_t KeyboardDriver::doHandleInterrupt(uint32_t esp) {
-  printf("KeyboardDriver::doHandleInterrupt\n");
   uint8_t key = dataport.Read();
   if (key < 0x80) {
     switch (key) {
@@ -151,8 +150,8 @@ uint32_t KeyboardDriver::doHandleInterrupt(uint32_t esp) {
       break;
 
     default: {
-      char *foo = "KEYBOARD 0x00 ";
-      char *hex = "0123456789ABCDEF";
+      char foo[15] = "KEYBOARD 0x00 ";
+      char hex[17] = "0123456789ABCDEF";
       foo[11] = hex[(key >> 4) & 0xF];
       foo[12] = hex[key & 0xF];
       printf(foo);
