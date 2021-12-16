@@ -1,9 +1,26 @@
 #include "mouse.h"
 void printf(const char *str);
 
-MouseDriver::MouseDriver(InterruptManager *manager)
+void MouseEventHandler::doOnMouseDown(uint8_t button) {}
+void MouseEventHandler::doOnMouseUp(uint8_t button) {}
+void MouseEventHandler::doOnMouseMove(int8_t x, int8_t y) {}
+void MouseEventHandler::doOnActivate() {}
+
+void MouseEventHandler::OnMouseDown(uint8_t button) {
+  return doOnMouseDown(button);
+}
+void MouseEventHandler::OnMouseUp(uint8_t button) {
+  return doOnMouseUp(button);
+}
+void MouseEventHandler::OnMouseMove(int8_t x, int8_t y) {
+  return doOnMouseMove(x, y);
+}
+void MouseEventHandler::OnActivate() { return doOnActivate(); }
+
+MouseDriver::MouseDriver(InterruptManager *manager, MouseEventHandler *handler)
     : InterruptHandler(0x2C, manager), dataport(0x60), commandport(0x64) {
   printf("Mouse driver constructed\n");
+  this->handler = handler;
 }
 MouseDriver::~MouseDriver() { printf("mouse destructor\n"); }
 
@@ -11,12 +28,6 @@ void MouseDriver::doActivate() {
   printf("Activate mouse\n");
   offset = 0;
   buttons = 0;
-  uint8_t x = 40, y = 12;
-  uint16_t *VideoMem = (uint16_t *)0xb8000;
-
-  VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
-                          ((VideoMem[80 * y + x] & 0x0F00) << 4) |
-                          (VideoMem[80 * y + x] & 0x00FF));
 
   commandport.Write(0xA8); // activate interrupts for mouse
   commandport.Write(0x20); // get current state
@@ -38,36 +49,20 @@ uint32_t MouseDriver::doHandleInterrupt(uint32_t esp) {
   }
   static int8_t x = 40, y = 12;
   buffer[offset] = dataport.Read();
+
+  if (!handler) return esp;
+  
   offset = (offset + 1) % 3;
 
   if (offset == 0) {
-    uint16_t *VideoMem = (uint16_t *)0xb8000;
-
-    VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
-                            ((VideoMem[80 * y + x] & 0x0F00) << 4) |
-                            (VideoMem[80 * y + x] & 0x00FF));
-
-    x += buffer[1];
-    if (x < 0)
-      x = 0;
-    if (x >= 80)
-      x = 79;
-
-    y -= buffer[2];
-    if (y < 0)
-      y = 0;
-    if (y >= 25)
-      y = 24;
-
-    VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
-                            ((VideoMem[80 * y + x] & 0x0F00) << 4) |
-                            (VideoMem[80 * y + x] & 0x00FF));
+    handler->OnMouseMove(buffer[1], -buffer[2]);
 
     for (uint8_t i = 0; i < 3; i++) {
       if ((buffer[0] & (0x01 << i)) != (buttons & (0x01 << i))) {
-        VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
-                                ((VideoMem[80 * y + x] & 0x0F00) << 4) |
-                                (VideoMem[80 * y + x] & 0x00FF));
+        if (buttons & (0x01 << i))
+          handler->OnMouseUp(i + 1);
+        else
+          handler->OnMouseDown(i + 1);
       }
     }
     buttons = buffer[0];

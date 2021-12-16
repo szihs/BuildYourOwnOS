@@ -49,6 +49,64 @@ void printf(const char *str) {
   }
 }
 
+void printfHex(uint8_t key) {
+  char foo[3] = "00";
+  char hex[17] = "0123456789ABCDEF";
+  foo[0] = hex[(key >> 4) & 0xF];
+  foo[1] = hex[key & 0xF];
+  printf(foo);
+  printf("\n");
+}
+
+class PrintKeyboardEventHandler : public KeyboardEventHandler {
+private:
+  void doOnKeyDown(char c) {
+    char foo[2] = " ";
+    foo[0] = c;
+    printf(foo);
+  }
+};
+
+class MouseConsole : public MouseEventHandler {
+private:
+  int8_t x{40};
+  int8_t y{12};
+
+  void doOnMouseMove(int8_t xoffset, int8_t yoffset) {
+
+    uint16_t *VideoMem = (uint16_t *)0xb8000;
+
+    VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
+                            ((VideoMem[80 * y + x] & 0x0F00) << 4) |
+                            (VideoMem[80 * y + x] & 0x00FF));
+
+    x += xoffset;
+    if (x < 0)
+      x = 0;
+    if (x >= 80)
+      x = 79;
+
+    y += yoffset;
+    if (y < 0)
+      y = 0;
+    if (y >= 25)
+      y = 24;
+
+    VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
+                            ((VideoMem[80 * y + x] & 0x0F00) << 4) |
+                            (VideoMem[80 * y + x] & 0x00FF));
+  }
+
+public:
+  MouseConsole() {
+    uint16_t *VideoMem = (uint16_t *)0xb8000;
+
+    VideoMem[80 * y + x] = (((VideoMem[80 * y + x] & 0xF000) >> 4) |
+                            ((VideoMem[80 * y + x] & 0x0F00) << 4) |
+                            (VideoMem[80 * y + x] & 0x00FF));
+  }
+};
+
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
@@ -66,10 +124,12 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   DriverManager drvManager;
   printf("Init Stage : 1\n");
 
-  KeyboardDriver keyboard(&interrupts);
+  PrintKeyboardEventHandler printKey;
+  KeyboardDriver keyboard(&interrupts, &printKey);
   drvManager.AddDriver(&keyboard);
 
-  MouseDriver mouse(&interrupts);
+  MouseConsole mouseConsole;
+  MouseDriver mouse(&interrupts, &mouseConsole);
   drvManager.AddDriver(&mouse);
   printf("Init Stage : 2\n");
 
