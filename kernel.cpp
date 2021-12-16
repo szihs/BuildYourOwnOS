@@ -1,3 +1,4 @@
+#include "driver.h"
 #include "gdt.h"
 #include "interrupts.h"
 #include "keyboard.h"
@@ -61,8 +62,19 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   printf("Hello ~ From Custom Kernel\n");
   GlobalDescriptorTable gdt;
   InterruptManager interrupts(&gdt);
+
+  DriverManager drvManager;
+  printf("Init Stage : 1\n");
+
   KeyboardDriver keyboard(&interrupts);
-  MouseDriver mouseboard(&interrupts);
+  drvManager.AddDriver(&keyboard);
+
+  MouseDriver mouse(&interrupts);
+  drvManager.AddDriver(&mouse);
+  printf("Init Stage : 2\n");
+
+  drvManager.ActivateAll();
+  printf("Init Stage : 3\n");
 
   interrupts.Activate();
   while (1)

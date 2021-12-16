@@ -3,6 +3,12 @@ void printf(const char *str);
 
 KeyboardDriver::KeyboardDriver(InterruptManager *manager)
     : InterruptHandler(0x21, manager), dataport(0x60), commandport(0x64) {
+  printf("Keyboard driver constructed\n");
+}
+KeyboardDriver::~KeyboardDriver() {}
+
+void KeyboardDriver::doActivate() {
+  printf("Keyboard Activated\n");
   while (commandport.Read() & 0x1) {
     dataport.Read();
   }
@@ -13,9 +19,7 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager)
   commandport.Write(0x60); // set state
   dataport.Write(status);
   dataport.Write(0xF4);
-  printf("Keyboard driver constructed\n");
 }
-KeyboardDriver::~KeyboardDriver() {}
 
 uint32_t KeyboardDriver::doHandleInterrupt(uint32_t esp) {
   uint8_t key = dataport.Read();
@@ -155,6 +159,7 @@ uint32_t KeyboardDriver::doHandleInterrupt(uint32_t esp) {
       foo[11] = hex[(key >> 4) & 0xF];
       foo[12] = hex[key & 0xF];
       printf(foo);
+      printf("\n");
       break;
     }
     }

@@ -3,7 +3,12 @@ void printf(const char *str);
 
 MouseDriver::MouseDriver(InterruptManager *manager)
     : InterruptHandler(0x2C, manager), dataport(0x60), commandport(0x64) {
+  printf("Mouse driver constructed\n");
+}
+MouseDriver::~MouseDriver() { printf("mouse destructor\n"); }
 
+void MouseDriver::doActivate() {
+  printf("Activate mouse\n");
   offset = 0;
   buttons = 0;
   uint8_t x = 40, y = 12;
@@ -23,9 +28,7 @@ MouseDriver::MouseDriver(InterruptManager *manager)
   commandport.Write(0xD4);
   dataport.Write(0xF4);
   dataport.Read();
-  printf("Mouse driver constructed\n");
 }
-MouseDriver::~MouseDriver() {}
 
 uint32_t MouseDriver::doHandleInterrupt(uint32_t esp) {
 
