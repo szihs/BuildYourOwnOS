@@ -1,11 +1,16 @@
-#include "driver.h"
-#include "gdt.h"
-#include "interrupts.h"
-#include "keyboard.h"
-#include "mouse.h"
-#include "types.h"
+#include <drivers/driver.h>
+#include <gdt.h>
+#include <hardwarecomm/interrupts.h>
+#include <drivers/keyboard.h>
+#include <drivers/mouse.h>
+#include <common/types.h>
+
 #define SCREEN_W 80
 #define SCREEN_H 25
+
+using namespace os::common;
+using namespace os::drivers;
+using namespace os::hardwarecomm;
 
 /*
  #if 1

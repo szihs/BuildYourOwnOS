@@ -1,4 +1,7 @@
-#include "interrupts.h"
+#include  <hardwarecomm/interrupts.h>
+using namespace os::common;
+using namespace os::hardwarecomm;
+
 void printf(const char *str);
 void printfHex(uint8_t key);
 

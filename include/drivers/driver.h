@@ -1,11 +1,13 @@
 #pragma once
-#include "types.h"
+#include <common/types.h>
+namespace os {
+namespace drivers {
 class Driver {
 private:
   virtual void doActivate();
   virtual void doDeactivate();
 
-  virtual int32_t doReset();
+  virtual os::common::int32_t doReset();
 
 public:
   Driver();
@@ -13,7 +15,7 @@ public:
   void Activate();
   void Deactivate();
 
-  int32_t Reset();
+  os::common::int32_t Reset();
 };
 
 class DriverManager {
@@ -28,3 +30,5 @@ public:
   void AddDriver(Driver *);
   void ActivateAll();
 };
+} // namespace drivers
+} // namespace os

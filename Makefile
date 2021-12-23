@@ -1,12 +1,23 @@
-GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
+GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
 LDPARAMS = -melf_i386
 ASPARAMS = --32
 
-objects = loader.o gdt.o driver.o port.o interruptstubs.o interrupts.o keyboard.o mouse.o kernel.o
-%.o: %.cpp
+objects = obj/loader.o \
+		  obj/gdt.o \
+		  obj/drivers/driver.o \
+		  obj/hardwarecomm/port.o \
+		  obj/hardwarecomm/interruptstubs.o \
+		  obj/hardwarecomm/interrupts.o \
+		  obj/drivers/keyboard.o \
+		  obj/drivers/mouse.o \
+		  obj/kernel.o
+
+obj/%.o: src/%.cpp
+	mkdir -p $(@D)
 	g++ $(GCCPARAMS) -o $@ -c $<
 
-%.o: %.s
+obj/%.o: src/%.s
+	mkdir -p $(@D)
 	as $(ASPARAMS) -o $@ $<
 
 mykernel.bin: linker.ld $(objects)
@@ -36,4 +47,4 @@ run: mykernel.iso
 
 .PHONY: clean
 clean:
-	rm -rf $(objects) mykernel.bin mykernel.iso
+	rm -rf obj mykernel.bin mykernel.iso

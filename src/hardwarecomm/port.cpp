@@ -1,4 +1,6 @@
-#include "port.h"
+#include <hardwarecomm/port.h>
+using namespace os::common;
+using namespace os::hardwarecomm;
 
 Port::Port(uint16_t portnumber) { this->portNumber = portnumber; }
 

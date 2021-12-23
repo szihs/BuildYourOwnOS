@@ -1,4 +1,7 @@
-#include "driver.h"
+#include <drivers/driver.h>
+using namespace os::common;
+using namespace os::drivers;
+
 void printf(const char *);
 
 Driver::Driver() {}

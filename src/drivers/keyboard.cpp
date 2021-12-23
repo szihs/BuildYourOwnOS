@@ -1,4 +1,8 @@
-#include "keyboard.h"
+#include <drivers/keyboard.h>
+using namespace os::common;
+using namespace os::drivers;
+using namespace os::hardwarecomm;
+
 void printf(const char *str);
 void printfHex(uint8_t key);
 

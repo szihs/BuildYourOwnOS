@@ -1,4 +1,7 @@
-#include "mouse.h"
+#include <drivers/mouse.h>
+using namespace os::common;
+using namespace os::drivers;
+using namespace os::hardwarecomm;
 void printf(const char *str);
 
 void MouseEventHandler::doOnMouseDown(uint8_t button) {}
