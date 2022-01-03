@@ -25,7 +25,6 @@ using namespace os::hardwarecomm;
 void printf(const char *str) {
   static uint8_t x = 0, y = 0;
   uint16_t *VideoMemory = (uint16_t *)(0xb8000);
-  uint8_t c;
   for (uint32_t i = 0; str[i] != '\0'; i++) {
 
     switch (str[i]) {

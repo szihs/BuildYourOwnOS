@@ -19,11 +19,11 @@ public:
 
 class KeyboardDriver : public os::hardwarecomm::InterruptHandler, public Driver {
 private:
+  KeyboardEventHandler *handler;
   os::hardwarecomm::Port8Bit dataport;
   os::hardwarecomm::Port8Bit commandport;
   virtual os::common::uint32_t doHandleInterrupt(os::common::uint32_t esp);
   virtual void doActivate();
-  KeyboardEventHandler *handler;
 
 public:
   KeyboardDriver(os::hardwarecomm::InterruptManager *manager, KeyboardEventHandler *handler);

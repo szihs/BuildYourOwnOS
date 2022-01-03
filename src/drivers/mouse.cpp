@@ -50,7 +50,6 @@ uint32_t MouseDriver::doHandleInterrupt(uint32_t esp) {
   if (!(status & 0x20)) {
     return esp;
   }
-  static int8_t x = 40, y = 12;
   buffer[offset] = dataport.Read();
 
   if (!handler) return esp;

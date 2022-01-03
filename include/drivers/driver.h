@@ -22,7 +22,7 @@ class DriverManager {
 
 private:
   Driver *drivers[256];
-  int numDrivers;
+  os::common::uint32_t numDrivers;
 
 public:
   DriverManager();

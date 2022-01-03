@@ -173,6 +173,7 @@ uint32_t KeyboardDriver::doHandleInterrupt(uint32_t esp) {
       char foo[13] = "KEYBOARD 0x";
       printf(foo);
       printfHex(key);
+      printf("\n");
       break;
     }
     }
