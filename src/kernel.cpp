@@ -1,9 +1,10 @@
+#include <common/types.h>
 #include <drivers/driver.h>
-#include <gdt.h>
-#include <hardwarecomm/interrupts.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
-#include <common/types.h>
+#include <gdt.h>
+#include <hardwarecomm/interrupts.h>
+#include <hardwarecomm/pci.h>
 
 #define SCREEN_W 80
 #define SCREEN_H 25
@@ -60,7 +61,6 @@ void printfHex(uint8_t key) {
   foo[0] = hex[(key >> 4) & 0xF];
   foo[1] = hex[key & 0xF];
   printf(foo);
-  printf("\n");
 }
 
 class PrintKeyboardEventHandler : public KeyboardEventHandler {
@@ -122,7 +122,7 @@ extern "C" void callConstructors() {
 }
 
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
-  printf("Hello ~ From Custom Kernel\n");
+  printf("Hello ~ Refactored Custom Kernel\n");
   GlobalDescriptorTable gdt;
   InterruptManager interrupts(&gdt);
 
@@ -136,6 +136,9 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   MouseConsole mouseConsole;
   MouseDriver mouse(&interrupts, &mouseConsole);
   drvManager.AddDriver(&mouse);
+
+  PeripheralComponentInterconnectController PCIController;
+  PCIController.SelectDrivers(&drvManager);
   printf("Init Stage : 2\n");
 
   drvManager.ActivateAll();

@@ -1,4 +1,4 @@
-#include  <hardwarecomm/interrupts.h>
+#include <hardwarecomm/interrupts.h>
 using namespace os::common;
 using namespace os::hardwarecomm;
 

@@ -1,6 +1,6 @@
 #pragma once
-#include <gdt.h>
 #include <common/types.h>
+#include <gdt.h>
 #include <hardwarecomm/port.h>
 
 #define N_ENTRIES 256
@@ -47,8 +47,9 @@ protected:
   } __attribute__((packed));
 
   static void SetInterruptDescriptorTableEntry(
-      os::common::uint8_t interruptNumber, os::common::uint16_t codeSegmentSelectorOffset,
-      void (*handler)(), os::common::uint8_t DescriptorPrivelegeLevel,
+      os::common::uint8_t interruptNumber,
+      os::common::uint16_t codeSegmentSelectorOffset, void (*handler)(),
+      os::common::uint8_t DescriptorPrivelegeLevel,
       os::common::uint8_t DescriptorType);
 
   Port8BitSlow picMasterCommand;
