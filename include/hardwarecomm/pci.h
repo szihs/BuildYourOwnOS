@@ -6,7 +6,15 @@
 
 namespace os {
 namespace hardwarecomm {
+enum BaseAddressRegisterType { MemoryMapping = 0, InputOutput = 1 };
 
+class BaseAddressRegister {
+public:
+  bool prefetchable;
+  os::common::uint8_t *address;
+  os::common::uint32_t size;
+  BaseAddressRegisterType type;
+};
 class PeripheralComponentInterconnectDeviceDescriptor {
 public:
   os::common::uint32_t portBase;
@@ -49,10 +57,19 @@ public:
   bool DeviceHasFunctions(os::common::uint16_t bus,
                           os::common::uint16_t device);
 
-  void SelectDrivers(os::drivers::DriverManager *drvManager);
+  void SelectDrivers(os::drivers::DriverManager *drvManager,
+                     os::hardwarecomm::InterruptManager *interrupts);
   PeripheralComponentInterconnectDeviceDescriptor
   GetDeviceDescriptor(os::common::uint16_t bus, os::common::uint16_t device,
                       os::common::uint16_t function);
+
+  os::drivers::Driver *
+  GetDriver(PeripheralComponentInterconnectDeviceDescriptor dev,
+            os::hardwarecomm::InterruptManager *interrupts);
+  BaseAddressRegister GetBaseAddressRegister(os::common::uint16_t bus,
+                                             os::common::uint16_t device,
+                                             os::common::uint16_t function,
+                                             os::common::uint16_t bar);
 };
 } // namespace hardwarecomm
 } // namespace os
