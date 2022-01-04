@@ -72,7 +72,7 @@ void PeripheralComponentInterconnectController::SelectDrivers(
             GetDeviceDescriptor(bus, device, func);
 
         if (dev.vendor_id == 0x0000 || dev.vendor_id == 0xFFFF)
-          break;
+          continue;
 
         printf("PCI BUS ");
         printfHex(bus & 0xFF);
