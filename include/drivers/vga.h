@@ -22,21 +22,20 @@ private:
   common::uint8_t *GetFrameBufferSegment();
   common::uint8_t GetColorIndex(common::uint8_t r, common::uint8_t g,
                                 common::uint8_t b);
+  bool SupportsMode(common::uint32_t width, common::uint32_t height,
+                    common::uint32_t colordepth);
+  bool PutPixel(common::uint32_t x, common::uint32_t y,
+                common::uint8_t colorIndex);
 
 public:
   VideoGraphicsArray();
   ~VideoGraphicsArray();
 
-  bool SupportsMode(common::uint32_t width, common::uint32_t height,
-                    common::uint32_t colordepth);
   bool SetMode(common::uint32_t width, common::uint32_t height,
                common::uint32_t colordepth);
 
   void PutPixel(common::uint32_t x, common::uint32_t y, common::uint8_t r,
                 common::uint8_t g, common::uint8_t b);
-
-  bool PutPixel(common::uint32_t x, common::uint32_t y,
-                common::uint8_t colorIndex);
 };
 } // namespace drivers
 } // namespace os
