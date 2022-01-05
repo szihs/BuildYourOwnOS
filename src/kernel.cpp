@@ -2,6 +2,7 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+#include <drivers/vga.h>
 #include <gdt.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/pci.h>
@@ -142,6 +143,12 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   drvManager.ActivateAll();
   printf("Init Stage : 3\n");
+
+  VideoGraphicsArray vga;
+  vga.SetMode(320, 200, 8);
+  for (uint16_t y = 0; y < 200; y++)
+    for (uint16_t x = 0; x < 320; x++)
+      vga.PutPixel(x, y, 0x0, 0x0, 0xA8);
 
   interrupts.Activate();
   while (1)

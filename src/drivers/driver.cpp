@@ -10,7 +10,7 @@ Driver::~Driver() {}
 
 void Driver::doActivate() { printf("Base doActivate\n"); }
 void Driver::doDeactivate() {}
-int32_t Driver::doReset() {return 0;}
+int32_t Driver::doReset() { return 0; }
 
 void Driver::Activate() { doActivate(); }
 void Driver::Deactivate() { doDeactivate(); }

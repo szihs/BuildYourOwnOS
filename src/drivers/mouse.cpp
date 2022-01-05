@@ -52,8 +52,9 @@ uint32_t MouseDriver::doHandleInterrupt(uint32_t esp) {
   }
   buffer[offset] = dataport.Read();
 
-  if (!handler) return esp;
-  
+  if (!handler)
+    return esp;
+
   offset = (offset + 1) % 3;
 
   if (offset == 0) {

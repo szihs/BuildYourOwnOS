@@ -11,15 +11,16 @@ private:
   virtual void doOnActivate();
 
 public:
-  MouseEventHandler(){}
-  ~MouseEventHandler(){}
+  MouseEventHandler() {}
+  ~MouseEventHandler() {}
   void OnMouseDown(os::common::uint8_t button);
   void OnMouseUp(os::common::uint8_t button);
   void OnMouseMove(os::common::int8_t x, os::common::int8_t y);
   void OnActivate();
 };
 
-class MouseDriver : public os::hardwarecomm::InterruptHandler, public os::drivers::Driver {
+class MouseDriver : public os::hardwarecomm::InterruptHandler,
+                    public os::drivers::Driver {
 private:
   os::hardwarecomm::Port8Bit dataport;
   os::hardwarecomm::Port8Bit commandport;
@@ -32,6 +33,7 @@ private:
   virtual void doActivate();
 
 public:
-  MouseDriver(os::hardwarecomm::InterruptManager *manager, MouseEventHandler *handler);
+  MouseDriver(os::hardwarecomm::InterruptManager *manager,
+              MouseEventHandler *handler);
   ~MouseDriver();
 };

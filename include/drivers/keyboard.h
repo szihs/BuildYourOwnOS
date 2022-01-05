@@ -17,7 +17,8 @@ public:
   void OnKeyUp(char);
 };
 
-class KeyboardDriver : public os::hardwarecomm::InterruptHandler, public Driver {
+class KeyboardDriver : public os::hardwarecomm::InterruptHandler,
+                       public Driver {
 private:
   KeyboardEventHandler *handler;
   os::hardwarecomm::Port8Bit dataport;
@@ -26,7 +27,8 @@ private:
   virtual void doActivate();
 
 public:
-  KeyboardDriver(os::hardwarecomm::InterruptManager *manager, KeyboardEventHandler *handler);
+  KeyboardDriver(os::hardwarecomm::InterruptManager *manager,
+                 KeyboardEventHandler *handler);
   ~KeyboardDriver();
 };
 
