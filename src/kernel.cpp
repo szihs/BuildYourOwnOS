@@ -5,9 +5,9 @@
 #include <drivers/vga.h>
 #include <gdt.h>
 #include <gui/desktop.h>
+#include <gui/window.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/pci.h>
-
 #define SCREEN_W 80
 #define SCREEN_H 25
 
@@ -152,9 +152,14 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   VideoGraphicsArray vga;
   vga.SetMode(320, 200, 8);
   // vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
+
+  Window win1(&desktop, 0, 0, 200, 200, 0xA8, 0x0, 0x0);
+  desktop.AddChild(&win1);
+  // Window win2(&desktop, 40,15, 30,30,0x0,0xA8,0x0);
+  // desktop.AddChild(&win2);
   interrupts.Activate();
 
   while (1) {
-    desktop.Draw(&vga);
+      desktop.Draw(&vga);
   }
 }

@@ -10,12 +10,6 @@ private:
   bool isFocussable;
   virtual void doGetFocus(Widget *widget);
   virtual void doModelToScreen(common::int32_t &x, common::int32_t &y);
-  virtual void doOnMouseDown(common::int32_t x, common::int32_t y,
-                             common::uint8_t button);
-  virtual void doOnMouseUp(common::int32_t x, common::int32_t y,
-                           common::uint8_t button);
-  virtual void doOnMouseMove(common::int32_t oldx, common::int32_t oldy,
-                             common::int32_t newx, common::int32_t newy);
 
 protected:
   Widget *parent;
@@ -37,10 +31,10 @@ public:
   void ModelToScreen(common::int32_t &x, common::int32_t &y);
   bool ContainsCoordinate(common::int32_t x, common::int32_t y);
   void Draw(common::GraphicsContext *gc);
-  void OnMouseDown(common::int32_t x, common::int32_t y,
+  virtual void OnMouseDown(common::int32_t x, common::int32_t y,
                    common::uint8_t button);
-  void OnMouseUp(common::int32_t x, common::int32_t y, common::uint8_t button);
-  void OnMouseMove(common::int32_t oldx, common::int32_t oldy,
+  virtual void OnMouseUp(common::int32_t x, common::int32_t y, common::uint8_t button);
+  virtual void OnMouseMove(common::int32_t oldx, common::int32_t oldy,
                    common::int32_t newx, common::int32_t newy);
 };
 
@@ -55,13 +49,6 @@ private:
   //  virtual void doModelToScreen(common::int32_t &x, common::int32_t &y);
   //  //not reqd
 
-  virtual void doOnMouseDown(common::int32_t x, common::int32_t y,
-                             common::uint8_t button);
-  virtual void doOnMouseUp(common::int32_t x, common::int32_t y,
-                           common::uint8_t button);
-  virtual void doOnMouseMove(common::int32_t oldx, common::int32_t oldy,
-                             common::int32_t newx, common::int32_t newy);
-
   virtual void doOnKeyDown(char c);
   virtual void doOnKeyUp(char c);
 
@@ -70,6 +57,12 @@ public:
                   common::int32_t w, common::int32_t h, common::uint8_t r,
                   common::uint8_t g, common::uint8_t b);
   ~CompositeWidget();
+
+  virtual void OnMouseDown(common::int32_t x, common::int32_t y,
+                   common::uint8_t button);
+  virtual void OnMouseUp(common::int32_t x, common::int32_t y, common::uint8_t button);
+  virtual void OnMouseMove(common::int32_t oldx, common::int32_t oldy,
+                   common::int32_t newx, common::int32_t newy);
   void Draw(common::GraphicsContext *gc);
   bool AddChild(Widget *child);
 };
