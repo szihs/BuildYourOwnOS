@@ -153,10 +153,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   vga.SetMode(320, 200, 8);
   // vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
 
-  Window win1(&desktop, 0, 0, 200, 200, 0xA8, 0x0, 0x0);
+  Window win1(&desktop, 10, 10, 15, 10, 0xA8, 0x0, 0x0);
   desktop.AddChild(&win1);
-  // Window win2(&desktop, 40,15, 30,30,0x0,0xA8,0x0);
-  // desktop.AddChild(&win2);
+  Window win2(&desktop, 40,15, 30,30,0x0,0xA8,0x0);
+  desktop.AddChild(&win2);
   interrupts.Activate();
 
   while (1) {

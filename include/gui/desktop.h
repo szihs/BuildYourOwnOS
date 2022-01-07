@@ -10,6 +10,7 @@ private:
   common::uint32_t MouseX;
   common::uint32_t MouseY;
 
+  /* override mouseeventhandler func */
   virtual void doOnMouseDown(os::common::uint8_t button);
   virtual void doOnMouseUp(os::common::uint8_t button);
   virtual void doOnMouseMove(os::common::int8_t x, os::common::int8_t y);

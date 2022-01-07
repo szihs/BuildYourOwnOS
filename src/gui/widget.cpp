@@ -22,20 +22,20 @@ Widget::Widget(Widget *parent, int32_t x, int32_t y, int32_t w, int32_t h,
 Widget::~Widget() {}
 
 void Widget::doGetFocus(Widget *widget) {
-  // if (parent)
-  //   parent->doGetFocus(widget); // default impl
+  if (parent)
+    parent->doGetFocus(widget); // default impl
 }
 void Widget::doModelToScreen(int32_t &x, int32_t &y) {
   if (parent)
-    parent->doModelToScreen(x, y);
+    parent->ModelToScreen(x, y);
 
   x += this->x;
   y += this->y;
 }
 
 void Widget::doOnMouseDown(int32_t x, int32_t y, uint8_t button) {
-  //  if (isFocussable)
-  //    GetFocus(this);
+   if (isFocussable)
+     GetFocus(this);
 }
 void Widget::doOnMouseUp(int32_t x, int32_t y, uint8_t button) {}
 void Widget::doOnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,

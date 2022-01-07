@@ -9,7 +9,7 @@ class Window : public CompositeWidget {
 private:
   bool draggable;
 
-  // widget mouse override
+  // widget widget::mouse override
   void doOnMouseDown(common::int32_t x, common::int32_t y,
                      common::uint8_t button);
   void doOnMouseUp(common::int32_t x, common::int32_t y,
