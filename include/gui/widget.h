@@ -10,7 +10,6 @@ private:
   bool isFocussable;
   virtual void doGetFocus(Widget *widget);
   virtual void doModelToScreen(common::int32_t &x, common::int32_t &y);
-
   virtual void doOnMouseDown(common::int32_t x, common::int32_t y,
                              common::uint8_t button);
   virtual void doOnMouseUp(common::int32_t x, common::int32_t y,

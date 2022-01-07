@@ -130,13 +130,16 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   DriverManager drvManager;
   printf("Init Stage : 1\n");
+  Desktop desktop(320, 200, 0x00, 0x00, 0xA8);
 
-  PrintKeyboardEventHandler printKey;
-  KeyboardDriver keyboard(&interrupts, &printKey);
+  // PrintKeyboardEventHandler printKey;
+  //  KeyboardDriver keyboard(&interrupts, &printKey);
+  KeyboardDriver keyboard(&interrupts, &desktop);
   drvManager.AddDriver(&keyboard);
 
-  MouseConsole mouseConsole;
-  MouseDriver mouse(&interrupts, &mouseConsole);
+  // MouseConsole mouseConsole;
+  // MouseDriver mouse(&interrupts, &mouseConsole);
+  MouseDriver mouse(&interrupts, &desktop);
   drvManager.AddDriver(&mouse);
 
   PeripheralComponentInterconnectController PCIController;
@@ -148,13 +151,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   VideoGraphicsArray vga;
   vga.SetMode(320, 200, 8);
-#if 0
- vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
-#else
-  Desktop desktop(320, 200, 0x00, 0x00, 0xA8);
-  desktop.Draw(&vga);
-#endif
+  // vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
   interrupts.Activate();
-  while (1)
-    ;
+
+  while (1) {
+    desktop.Draw(&vga);
+  }
 }

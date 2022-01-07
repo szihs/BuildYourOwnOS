@@ -1,8 +1,10 @@
 #include <gui/widget.h>
 using namespace os::common;
 using namespace os::gui;
+
 void printf(const char *str);
 void printfHex(uint8_t key);
+
 Widget::Widget(Widget *parent, int32_t x, int32_t y, int32_t w, int32_t h,
                uint8_t r, uint8_t g, uint8_t b)
     : KeyboardEventHandler() {
