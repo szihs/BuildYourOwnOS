@@ -33,13 +33,13 @@ void Widget::doModelToScreen(int32_t &x, int32_t &y) {
   y += this->y;
 }
 
-void Widget::OnMouseDown(int32_t x, int32_t y, uint8_t button) {
-  // if (isFocussable)
-  //   GetFocus(this);
+void Widget::doOnMouseDown(int32_t x, int32_t y, uint8_t button) {
+  //  if (isFocussable)
+  //    GetFocus(this);
 }
-void Widget::OnMouseUp(int32_t x, int32_t y, uint8_t button) {}
-void Widget::OnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
-                         int32_t newy) {}
+void Widget::doOnMouseUp(int32_t x, int32_t y, uint8_t button) {}
+void Widget::doOnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
+                           int32_t newy) {}
 
 void Widget::GetFocus(Widget *widget) { return doGetFocus(widget); }
 void Widget::ModelToScreen(int32_t &x, int32_t &y) {
@@ -53,13 +53,22 @@ bool Widget::ContainsCoordinate(int32_t x, int32_t y) {
 }
 
 void Widget::Draw(GraphicsContext *gc) {
-//  printf(" Widget Draw\n");
+  //  printf(" Widget Draw\n");
   int X = 0;
   int Y = 0;
   ModelToScreen(X, Y);
   gc->FillRectangle(X, Y, w, h, r, g, b);
 }
-
+void Widget::OnMouseDown(int32_t x, int32_t y, uint8_t button) {
+  return doOnMouseDown(x, y, button);
+}
+void Widget::OnMouseUp(int32_t x, int32_t y, uint8_t button) {
+  return doOnMouseUp(x, y, button);
+}
+void Widget::OnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
+                         int32_t newy) {
+  return doOnMouseMove(oldx, oldy, newx, newy);
+}
 CompositeWidget::CompositeWidget(Widget *parent, int32_t x, int32_t y,
                                  int32_t w, int32_t h, uint8_t r, uint8_t g,
                                  uint8_t b)
@@ -76,9 +85,9 @@ void CompositeWidget::doGetFocus(Widget *widget) {
 }
 
 void CompositeWidget::Draw(GraphicsContext *gc) {
-  //printf("Composite Draw\n");
+  // printf("Composite Draw\n");
   Widget::Draw(gc);
-  for (int32_t i = numChildren-1; i >= 0; i--)
+  for (int32_t i = numChildren - 1; i >= 0; i--)
     child[i]->Draw(gc);
 }
 
@@ -107,7 +116,7 @@ void CompositeWidget::OnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
   int32_t firstChild = -1;
   for (int32_t i = 0; i < numChildren; i++) {
     if (child[i]->ContainsCoordinate(oldx - this->x, oldy - this->y)) {
-            printf("child mouse move contained coord\n");
+      printf("child mouse move contained coord\n");
 
       child[i]->OnMouseMove(oldx - this->x, oldy - this->y, newx - this->x,
                             newy - this->y);
@@ -121,8 +130,7 @@ void CompositeWidget::OnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
       if (firstChild != i) {
         child[i]->OnMouseMove(oldx - this->x, oldy - this->y, newx - this->x,
                               newy - this->y);
-                                          printf("child mouse move contained coord\n");
-
+        printf("child mouse move contained coord\n");
       }
       break;
     }
