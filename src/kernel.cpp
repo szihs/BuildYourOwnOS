@@ -4,6 +4,7 @@
 #include <drivers/mouse.h>
 #include <drivers/vga.h>
 #include <gdt.h>
+#include <gui/desktop.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/pci.h>
 
@@ -13,6 +14,7 @@
 using namespace os::common;
 using namespace os::drivers;
 using namespace os::hardwarecomm;
+using namespace os::gui;
 
 /*
  #if 1
@@ -146,8 +148,12 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   VideoGraphicsArray vga;
   vga.SetMode(320, 200, 8);
-  vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
-
+#if 0
+ vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
+#else
+  Desktop desktop(320, 200, 0x00, 0x00, 0xA8);
+  desktop.Draw(&vga);
+#endif
   interrupts.Activate();
   while (1)
     ;

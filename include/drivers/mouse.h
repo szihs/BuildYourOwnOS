@@ -3,6 +3,9 @@
 #include <drivers/driver.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/port.h>
+
+namespace os {
+namespace drivers {
 class MouseEventHandler {
 private:
   virtual void doOnMouseDown(os::common::uint8_t button);
@@ -37,3 +40,5 @@ public:
               MouseEventHandler *handler);
   ~MouseDriver();
 };
+} // namespace drivers
+} // namespace os

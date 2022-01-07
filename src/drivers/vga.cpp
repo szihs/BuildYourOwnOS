@@ -3,7 +3,10 @@
 using namespace os::common;
 using namespace os::drivers;
 using namespace os::hardwarecomm;
+void printf(const char *str);
+void printfHex(uint8_t key);
 
+#define DISABLE_GFX 0
 VideoGraphicsArray::VideoGraphicsArray()
     : miscPort(0x3C2), crtcIndexPort(0x3D4), crtcDataPort(0x3D5),
       sequencerIndexPort(0x3C4), sequencerDataPort(0x3C5),
@@ -15,7 +18,9 @@ VideoGraphicsArray::VideoGraphicsArray()
 VideoGraphicsArray::~VideoGraphicsArray() {}
 
 void VideoGraphicsArray::WriteRegisters(uint8_t *registers) {
-
+#if DISABLE_GFX
+  return;
+#endif
   // MISC
   miscPort.Write(*(registers++));
 
@@ -75,8 +80,16 @@ uint8_t *VideoGraphicsArray::GetFrameBufferSegment() {
 }
 
 uint8_t VideoGraphicsArray::GetColorIndex(uint8_t r, uint8_t g, uint8_t b) {
+  if (r == 0x0 && g == 0x0 && b == 0x0)
+    return 0x00; // black
   if (r == 0x0 && g == 0x0 && b == 0xA8)
-    return 0x01;
+    return 0x01; // blue
+  if (r == 0x0 && g == 0xA8 && b == 0x00)
+    return 0x02; // green
+  if (r == 0xA8 && g == 0x0 && b == 0x00)
+    return 0x04; // red
+  if (r == 0xFF && g == 0xFF && b == 0xFF)
+    return 0x3F; // white
 
   return 0x0;
 }
@@ -114,6 +127,11 @@ void VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g,
 }
 
 bool VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex) {
+#if DISABLE_GFX
+  return 1;
+#endif
+  if (x >= 320 || y >= 200)
+    return false;
   uint8_t *pixelAddr = GetFrameBufferSegment() + 320 * y + x;
   *pixelAddr = colorIndex;
   return true;
@@ -122,7 +140,12 @@ bool VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex) {
 void VideoGraphicsArray::FillRectangle(uint32_t x, uint32_t y, uint32_t w,
                                        uint32_t h, uint8_t r, uint8_t g,
                                        uint8_t b) {
-  for (uint32_t Y = y; Y < y + h; Y++)
-    for (uint32_t X = x; X < x + w; X++)
+  if (x == 0 && y == 0 && w == 320 && h == 200)
+    printf("Fill Rectangle ---- \n\n");
+
+  for (uint32_t Y = y; Y < y + h; Y++) {
+    for (uint32_t X = x; X < x + w; X++) {
       PutPixel(X, Y, r, g, b);
+    }
+  }
 }
