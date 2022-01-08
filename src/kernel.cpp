@@ -155,11 +155,11 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   Window win1(&desktop, 10, 10, 15, 10, 0xA8, 0x0, 0x0);
   desktop.AddChild(&win1);
-  Window win2(&desktop, 40,15, 30,30,0x0,0xA8,0x0);
+  Window win2(&desktop, 40, 15, 30, 30, 0x0, 0xA8, 0x0);
   desktop.AddChild(&win2);
   interrupts.Activate();
-
+  // desktop.MouseEventHandler::OnMouseDown(0x0);
   while (1) {
-      desktop.Draw(&vga);
+    desktop.Draw(&vga);
   }
 }

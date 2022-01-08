@@ -56,7 +56,12 @@ private:
   virtual void doGetFocus(Widget *widget);
   //  virtual void doModelToScreen(common::int32_t &x, common::int32_t &y);
   //  //not reqd
-
+  virtual void doOnMouseDown(common::int32_t x, common::int32_t y,
+                             common::uint8_t button);
+  virtual void doOnMouseUp(common::int32_t x, common::int32_t y,
+                           common::uint8_t button);
+  virtual void doOnMouseMove(common::int32_t oldx, common::int32_t oldy,
+                             common::int32_t newx, common::int32_t newy);
   virtual void doOnKeyDown(char c);
   virtual void doOnKeyUp(char c);
 
@@ -67,11 +72,6 @@ public:
   ~CompositeWidget();
   void Draw(common::GraphicsContext *gc);
   bool AddChild(Widget *child);
-  void OnMouseDown(common::int32_t x, common::int32_t y,
-                   common::uint8_t button);
-  void OnMouseUp(common::int32_t x, common::int32_t y, common::uint8_t button);
-  void OnMouseMove(common::int32_t oldx, common::int32_t oldy,
-                   common::int32_t newx, common::int32_t newy);
 };
 } // namespace gui
 } // namespace os

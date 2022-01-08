@@ -12,11 +12,11 @@ Window::~Window() {}
 
 void Window::doOnMouseDown(int32_t x, int32_t y, uint8_t button) {
   draggable = (button == 1);
-  CompositeWidget::OnMouseDown(x, y, button);
+  printf("Window Mouse Down\n");
 }
 void Window::doOnMouseUp(int32_t x, int32_t y, uint8_t button) {
   draggable = false;
-  CompositeWidget::OnMouseUp(x, y, button);
+  printf("Window Mouse Up\n");
 }
 void Window::doOnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
                            int32_t newy) {
@@ -25,5 +25,4 @@ void Window::doOnMouseMove(int32_t oldx, int32_t oldy, int32_t newx,
     this->x += newx - oldx;
     this->y += newy - oldy;
   }
-  CompositeWidget::OnMouseMove(oldx, oldy, newx, newy);
 }
