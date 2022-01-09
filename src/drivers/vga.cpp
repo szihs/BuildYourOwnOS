@@ -12,9 +12,8 @@ VideoGraphicsArray::VideoGraphicsArray()
       sequencerIndexPort(0x3C4), sequencerDataPort(0x3C5),
       graphicsControllerIndexPort(0x3CE), graphicsControllerDataPort(0x3CF),
       attributeControllerIndexPort(0x3C0), attributeControllerReadPort(0x3C1),
-      attributeControllerWritePort(0x3C0), attributeControllerResetPort(0x3DA) {
-
-}
+      attributeControllerWritePort(0x3C0), attributeControllerResetPort(0x3DA),
+      fbSegmentAddr(nullptr) {}
 VideoGraphicsArray::~VideoGraphicsArray() {}
 
 void VideoGraphicsArray::WriteRegisters(uint8_t *registers) {
@@ -118,6 +117,7 @@ bool VideoGraphicsArray::SetMode(uint32_t width, uint32_t height,
       0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B,
       0x0C, 0x0D, 0x0E, 0x0F, 0x41, 0x00, 0x0F, 0x00, 0x00};
   WriteRegisters(g_320x200x256);
+  fbSegmentAddr = GetFrameBufferSegment();
   return true;
 }
 
@@ -132,8 +132,9 @@ bool VideoGraphicsArray::PutPixel(uint32_t x, uint32_t y, uint8_t colorIndex) {
 #endif
   if (x >= 320 || y >= 200)
     return false;
-  uint8_t *pixelAddr = GetFrameBufferSegment() + 320 * y + x;
+  uint8_t *pixelAddr = fbSegmentAddr + 320 * y + x;
   *pixelAddr = colorIndex;
+
   return true;
 }
 
@@ -142,7 +143,6 @@ void VideoGraphicsArray::FillRectangle(uint32_t x, uint32_t y, uint32_t w,
                                        uint8_t b) {
   // if (x == 0 && y == 0 && w == 320 && h == 200)
   //   printf("Fill Rectangle ---- \n\n");
-
   for (uint32_t Y = y; Y < y + h; Y++) {
     for (uint32_t X = x; X < x + w; X++) {
       PutPixel(X, Y, r, g, b);

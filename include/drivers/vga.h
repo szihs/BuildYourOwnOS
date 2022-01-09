@@ -17,6 +17,7 @@ private:
   hardwarecomm::Port8Bit attributeControllerReadPort;
   hardwarecomm::Port8Bit attributeControllerWritePort;
   hardwarecomm::Port8Bit attributeControllerResetPort;
+  common::uint8_t *fbSegmentAddr{nullptr};
   void WriteRegisters(common::uint8_t *registers);
 
   common::uint8_t *GetFrameBufferSegment();
