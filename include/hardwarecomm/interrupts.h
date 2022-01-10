@@ -2,6 +2,7 @@
 #include <common/types.h>
 #include <gdt.h>
 #include <hardwarecomm/port.h>
+#include <multitasking.h>
 
 #define N_ENTRIES 256
 namespace os {
@@ -29,7 +30,9 @@ class InterruptManager {
 
 protected:
   static InterruptManager *ActiveInterruptManager;
+
   InterruptHandler *handlers[N_ENTRIES];
+  TaskManager *taskManager;
   struct GateDescriptor {
     os::common::uint16_t handlerAddressLowBits;
     os::common::uint16_t gdt_codeSegmentSelector;
@@ -58,7 +61,7 @@ protected:
   Port8BitSlow picSlaveData;
 
 public:
-  InterruptManager(GlobalDescriptorTable *gdt);
+  InterruptManager(GlobalDescriptorTable *gdt, TaskManager *taskManager);
   ~InterruptManager();
   void Activate();
   void Deactivate();

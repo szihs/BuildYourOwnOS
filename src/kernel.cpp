@@ -8,9 +8,12 @@
 #include <gui/window.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/pci.h>
+#include <multitasking.h>
+
 #define SCREEN_W 80
 #define SCREEN_H 25
 
+using namespace os;
 using namespace os::common;
 using namespace os::drivers;
 using namespace os::hardwarecomm;
@@ -115,6 +118,15 @@ public:
   }
 };
 
+void taskA() {
+  while (true)
+    printf("Task A");
+}
+
+void taskB() {
+  while (true)
+    printf("Task B");
+}
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
@@ -127,7 +139,12 @@ extern "C" void callConstructors() {
 extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   printf("Hello ~ Refactored Custom Kernel\n");
   GlobalDescriptorTable gdt;
-  InterruptManager interrupts(&gdt);
+  TaskManager taskManager;
+  Task task1(&gdt, taskA);
+  Task task2(&gdt, taskB);
+  taskManager.AddTask(&task1);
+  taskManager.AddTask(&task2);
+  InterruptManager interrupts(&gdt, &taskManager);
 
   DriverManager drvManager;
   printf("Init Stage : 1\n");

@@ -1,4 +1,5 @@
 #include <hardwarecomm/interrupts.h>
+using namespace os;
 using namespace os::common;
 using namespace os::hardwarecomm;
 
@@ -48,7 +49,8 @@ void InterruptManager::SetInterruptDescriptorTableEntry(
   interruptDescriptorTable[interruptNumber].reserved = 0;
 }
 
-InterruptManager::InterruptManager(GlobalDescriptorTable *gdt)
+InterruptManager::InterruptManager(GlobalDescriptorTable *gdt,
+                                   TaskManager *taskManager)
     : picMasterCommand(0x20), picMasterData(0x21), picSlaveCommand(0XA0),
       picSlaveData(0xA1) {
   uint16_t CodeSegment = gdt->CodeSegmentSelector();
@@ -59,6 +61,7 @@ InterruptManager::InterruptManager(GlobalDescriptorTable *gdt)
     SetInterruptDescriptorTableEntry(i, CodeSegment, &IgnoreInterruptRequest, 0,
                                      IDT_INTERRUPT_GATE);
   }
+  this->taskManager = taskManager;
   handlers[0] = 0;
   SetInterruptDescriptorTableEntry(0, CodeSegment, &IgnoreInterruptRequest, 0,
                                    IDT_INTERRUPT_GATE);
@@ -116,6 +119,8 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber,
   } else if (interruptNumber != 0x20) {
     printfHex(interruptNumber);
     printf("\n");
+  } else if (interruptNumber == 0x20) {
+    esp = (uint32_t)taskManager->Schedule((CPUState *)esp);
   }
 
   if (0x20 <= interruptNumber && interruptNumber < 0x30) {
