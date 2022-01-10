@@ -16,6 +16,7 @@ using namespace os::drivers;
 using namespace os::hardwarecomm;
 using namespace os::gui;
 
+#define GRAPHICS_MODE 0
 /*
  #if 1
     VideoMemory[i] = (VideoMemory[i] & 0xFF00)| str[i];
@@ -130,16 +131,22 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
 
   DriverManager drvManager;
   printf("Init Stage : 1\n");
-  Desktop desktop(320, 200, 0x00, 0x00, 0xA8);
 
-  // PrintKeyboardEventHandler printKey;
-  //  KeyboardDriver keyboard(&interrupts, &printKey);
+#if !GRAPHICS_MODE
+  PrintKeyboardEventHandler printKey;
+  KeyboardDriver keyboard(&interrupts, &printKey);
+#else
+  Desktop desktop(320, 200, 0x00, 0x00, 0xA8);
   KeyboardDriver keyboard(&interrupts, &desktop);
+#endif
   drvManager.AddDriver(&keyboard);
 
-  // MouseConsole mouseConsole;
-  // MouseDriver mouse(&interrupts, &mouseConsole);
+#if !GRAPHICS_MODE
+  MouseConsole mouseConsole;
+  MouseDriver mouse(&interrupts, &mouseConsole);
+#else
   MouseDriver mouse(&interrupts, &desktop);
+#endif
   drvManager.AddDriver(&mouse);
 
   PeripheralComponentInterconnectController PCIController;
@@ -149,6 +156,7 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   drvManager.ActivateAll();
   printf("Init Stage : 3\n");
 
+#if GRAPHICSMODE
   VideoGraphicsArray vga;
   vga.SetMode(320, 200, 8);
   // vga.FillRectangle(0, 0, 320, 200, 0x0, 0x0, 0xA8);
@@ -157,9 +165,14 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   desktop.AddChild(&win1);
   Window win2(&desktop, 40, 15, 30, 30, 0x0, 0xA8, 0x0);
   desktop.AddChild(&win2);
-  interrupts.Activate();
   // desktop.MouseEventHandler::OnMouseDown(0x0);
+
+#endif
+
+  interrupts.Activate();
   while (1) {
+#if GRAPHICSMODE
     desktop.Draw(&vga);
+#endif
   }
 }
