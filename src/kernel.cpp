@@ -8,8 +8,8 @@
 #include <gui/window.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/pci.h>
+#include <memorymanagement.h>
 #include <multitasking.h>
-
 #define SCREEN_W 80
 #define SCREEN_H 25
 
@@ -140,10 +140,31 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   printf("Hello ~ Refactored Custom Kernel\n");
   GlobalDescriptorTable gdt;
   TaskManager taskManager;
+  size_t heap = 10 * 1024 * 1024;
+  uint32_t *memupper = (uint32_t *)((size_t)multiboot_structure + 8);
+  MemoryManager memoryManager(heap, (*memupper) * 1024 - heap - 10 * 1024);
+
+  printf("heap: 0x");
+  printfHex((heap >> 24) & 0xFF);
+  printfHex((heap >> 16) & 0xFF);
+  printfHex((heap >> 8) & 0xFF);
+  printfHex((heap)&0xFF);
+
+  void *allocated = memoryManager.malloc(1024);
+
+  printf("\n allocated: 0x");
+  printfHex(((size_t)allocated >> 24) & 0xFF);
+  printfHex(((size_t)allocated >> 16) & 0xFF);
+  printfHex(((size_t)allocated >> 8) & 0xFF);
+  printfHex(((size_t)allocated) & 0xFF);
+  printf("\n");
+
+  /*
   Task task1(&gdt, taskA);
   Task task2(&gdt, taskB);
   taskManager.AddTask(&task1);
   taskManager.AddTask(&task2);
+  */
   InterruptManager interrupts(&gdt, &taskManager);
 
   DriverManager drvManager;
