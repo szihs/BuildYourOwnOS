@@ -1,5 +1,5 @@
+#include <drivers/amd_am79c973.h>
 #include <hardwarecomm/pci.h>
-
 using namespace os::common;
 using namespace os::hardwarecomm;
 using namespace os::drivers;
@@ -66,11 +66,17 @@ Driver *PeripheralComponentInterconnectController::GetDriver(
     PeripheralComponentInterconnectDeviceDescriptor dev,
     os::hardwarecomm::InterruptManager *interrupts) {
 
+  Driver *driver = 0;
   switch (dev.vendor_id) {
-  case 0x1022: // AMD
-    //    printf("AMDDevice ");
+  case 0x1022: // AMD am79c973
     switch (dev.device_id) {
     case 0x2000:
+      driver = (amd_am79c973 *)MemoryManager::activeMemoryManager->malloc(
+          sizeof(amd_am79c973));
+      if (driver)
+        new (driver) amd_am79c973(&dev, interrupts);
+      printf("AMD am79c973 ");
+      return driver;
       break;
     }
     break;
@@ -84,7 +90,7 @@ Driver *PeripheralComponentInterconnectController::GetDriver(
   case 0x03: // graphics
     switch (dev.subclass_id) {
     case 0x00: // VGA
-      //    printf("VGA Device ");
+      printf("VGA ");
       break;
     }
   }
@@ -151,10 +157,11 @@ void PeripheralComponentInterconnectController::SelectDrivers(
           if (bar.address && (bar.type == InputOutput)) {
             dev.portBase = (uint32_t)bar.address;
           }
-          Driver *driver = GetDriver(dev, interrupts);
-          if (driver)
-            drvManager->AddDriver(driver);
         }
+
+        Driver *driver = GetDriver(dev, interrupts);
+        if (driver)
+          drvManager->AddDriver(driver);
         printf("PCI BUS ");
         printfHex(bus & 0xFF);
 

@@ -3,6 +3,7 @@
 #include <drivers/driver.h>
 #include <hardwarecomm/interrupts.h>
 #include <hardwarecomm/port.h>
+#include <memorymanagement.h>
 
 namespace os {
 namespace hardwarecomm {

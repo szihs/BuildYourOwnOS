@@ -76,3 +76,31 @@ void MemoryManager::free(void *ptr) {
       chunk->next->prev = chunk;
   }
 }
+
+void *operator new(unsigned int size) {
+  if (MemoryManager::activeMemoryManager == nullptr)
+    return nullptr;
+  return MemoryManager::activeMemoryManager->malloc(size);
+}
+
+void *operator new[](unsigned int size) {
+  if (MemoryManager::activeMemoryManager == nullptr)
+    return nullptr;
+
+  return MemoryManager::activeMemoryManager->malloc(size);
+}
+
+void operator delete(void *ptr) {
+  if (MemoryManager::activeMemoryManager)
+    MemoryManager::activeMemoryManager->free(ptr);
+}
+
+void operator delete[](void *ptr) {
+  if (MemoryManager::activeMemoryManager)
+    MemoryManager::activeMemoryManager->free(ptr);
+}
+
+void *operator new(unsigned int size, void *ptr) { return ptr; }
+void *operator new[](unsigned int size, void *ptr) { return ptr; }
+void operator delete(void *ptr, unsigned int) {}
+void operator delete[](void *ptr, unsigned int) {}

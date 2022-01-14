@@ -22,3 +22,15 @@ public:
   void free(void *ptr);
 };
 } // namespace os
+
+void *operator new(unsigned int size);
+void *operator new[](unsigned int size);
+
+void operator delete(void *ptr);
+void operator delete[](void *ptr);
+
+// placement new operator
+void *operator new(unsigned int size, void *ptr);
+void *operator new[](unsigned int size, void *ptr);
+void operator delete(void *, unsigned int);
+void operator delete[](void *, unsigned int);

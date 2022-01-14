@@ -72,6 +72,8 @@ InterruptManager::InterruptManager(GlobalDescriptorTable *gdt,
       0x21, CodeSegment, &HandleInterruptRequest0x01, 0, IDT_INTERRUPT_GATE);
   SetInterruptDescriptorTableEntry(
       0x2C, CodeSegment, &HandleInterruptRequest0x0C, 0, IDT_INTERRUPT_GATE);
+  SetInterruptDescriptorTableEntry(
+      0x29, CodeSegment, &HandleInterruptRequest0x09, 0, IDT_INTERRUPT_GATE);
 
   picMasterCommand.Write(0x11);
   picSlaveCommand.Write(0x11);

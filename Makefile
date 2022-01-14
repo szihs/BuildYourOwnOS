@@ -1,4 +1,4 @@
-GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wall -Werror
+GCCPARAMS = -m32 -Iinclude -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fcheck-new -Wall -Werror
 LDPARAMS = -melf_i386
 ASPARAMS = --32
 
@@ -14,6 +14,7 @@ objects = obj/loader.o \
 		  obj/drivers/keyboard.o \
 		  obj/drivers/vga.o \
 		  obj/drivers/mouse.o \
+		  obj/drivers/amd_am79c973.o \
 		  obj/gui/widget.o \
 		  obj/gui/window.o \
 		  obj/gui/desktop.o \
