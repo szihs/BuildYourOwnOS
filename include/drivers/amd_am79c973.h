@@ -63,6 +63,9 @@ public:
       hardwarecomm::PeripheralComponentInterconnectDeviceDescriptor *dev,
       hardwarecomm::InterruptManager *interrupts);
   ~amd_am79c973();
+
+  void Send(common::uint8_t *buffer, common::uint32_t count);
+  void Receive();
 };
 } // namespace drivers
 } // namespace os

@@ -129,3 +129,29 @@ uint32_t amd_am79c973::doHandleInterrupt(os::common::uint32_t esp) {
 
   return esp;
 }
+
+void amd_am79c973::Send(common::uint8_t *buffer, common::uint32_t size) {
+  uint8_t sendDescriptor = currentSendBuffer;
+  currentSendBuffer = (currentSendBuffer + 1) % 8;
+
+  if (size > 1518)
+    size = 1518;
+
+  for (uint8_t *src = buffer + size - 1,
+               *dst = (uint8_t *)(sendBufferDescr[sendDescriptor].address +
+                                  size - 1);
+       src >= buffer; src--, dst--) {
+    *dst = *src;
+  }
+
+  sendBufferDescr[sendDescriptor].avail = 0; // inuse
+
+  sendBufferDescr[sendDescriptor].flags2 = 0; // free errmsg
+  sendBufferDescr[sendDescriptor].flags =
+      0x8300F000 | ((uint16_t)((-size) & 0xFFF));
+
+  registerAddressPort.Write(0);
+  registerDataPort.Write(0x40); // SEND_CMD
+}
+
+void amd_am79c973::Receive() {}

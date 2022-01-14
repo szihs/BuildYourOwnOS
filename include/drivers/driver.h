@@ -29,6 +29,8 @@ public:
   ~DriverManager();
   void AddDriver(Driver *);
   void ActivateAll();
+
+  Driver* getDriver(common::uint8_t index) const { return drivers[index];}
 };
 } // namespace drivers
 } // namespace os

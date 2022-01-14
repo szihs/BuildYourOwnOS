@@ -3,6 +3,7 @@ using namespace os::common;
 using namespace os::drivers;
 
 void printf(const char *);
+void printfHex(uint8_t);
 
 Driver::Driver() {}
 
@@ -21,6 +22,9 @@ DriverManager::DriverManager() { numDrivers = 0; }
 DriverManager::~DriverManager() {}
 void DriverManager::AddDriver(Driver *drv) {
   drivers[numDrivers] = drv;
+  printf("Added numDriver ======================0x ");
+  printfHex(numDrivers);
+  printf("\n");
   numDrivers++;
 }
 

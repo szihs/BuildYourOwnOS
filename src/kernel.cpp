@@ -10,6 +10,8 @@
 #include <hardwarecomm/pci.h>
 #include <memorymanagement.h>
 #include <multitasking.h>
+#include <drivers/amd_am79c973.h>
+
 #define SCREEN_W 80
 #define SCREEN_H 25
 
@@ -204,8 +206,10 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   Window win2(&desktop, 40, 15, 30, 30, 0x0, 0xA8, 0x0);
   desktop.AddChild(&win2);
   // desktop.MouseEventHandler::OnMouseDown(0x0);
-
 #endif
+
+ // amd_am79c973 *eth0 = (amd_am79c973 *)drvManager.getDriver(2);
+//  eth0->Send((uint8_t *)"Hello Network", 13);
 
   interrupts.Activate();
   while (1) {

@@ -162,6 +162,7 @@ void PeripheralComponentInterconnectController::SelectDrivers(
         Driver *driver = GetDriver(dev, interrupts);
         if (driver)
           drvManager->AddDriver(driver);
+          
         printf("PCI BUS ");
         printfHex(bus & 0xFF);
 
