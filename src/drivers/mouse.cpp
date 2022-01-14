@@ -22,7 +22,6 @@ void MouseEventHandler::OnActivate() { return doOnActivate(); }
 
 MouseDriver::MouseDriver(InterruptManager *manager, MouseEventHandler *handler)
     : InterruptHandler(0x2C, manager), dataport(0x60), commandport(0x64) {
-  printf("Mouse driver constructed\n");
   this->handler = handler;
 }
 MouseDriver::~MouseDriver() { printf("mouse destructor\n"); }

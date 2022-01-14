@@ -22,9 +22,6 @@ DriverManager::DriverManager() { numDrivers = 0; }
 DriverManager::~DriverManager() {}
 void DriverManager::AddDriver(Driver *drv) {
   drivers[numDrivers] = drv;
-  printf("Added numDriver ======================0x ");
-  printfHex(numDrivers);
-  printf("\n");
   numDrivers++;
 }
 

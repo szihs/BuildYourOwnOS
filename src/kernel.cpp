@@ -208,8 +208,8 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   // desktop.MouseEventHandler::OnMouseDown(0x0);
 #endif
 
- // amd_am79c973 *eth0 = (amd_am79c973 *)drvManager.getDriver(2);
-//  eth0->Send((uint8_t *)"Hello Network", 13);
+ amd_am79c973 *eth0 = (amd_am79c973 *)drvManager.getDriver(2);
+ eth0->Send((uint8_t *)"Hello Network", 13);
 
   interrupts.Activate();
   while (1) {

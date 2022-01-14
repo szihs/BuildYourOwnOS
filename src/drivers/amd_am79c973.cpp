@@ -18,9 +18,9 @@ amd_am79c973::amd_am79c973(PeripheralComponentInterconnectDeviceDescriptor *dev,
   currentSendBuffer = 0;
   currentRecvBuffer = 0;
 
-  printf("============= Get me interrupt handler at ");
-  printfHex((uint8_t)(0x20 + dev->interrupt));
-  printf("\n=========\n");
+  // printf("============= Get me interrupt handler at ");
+  // printfHex((uint8_t)(0x20 + dev->interrupt));
+  // printf("\n=========\n");
 
   uint64_t MAC0 = MACAddress0Port.Read() % 256;
   uint64_t MAC1 = MACAddress0Port.Read() / 256;
@@ -116,7 +116,7 @@ uint32_t amd_am79c973::doHandleInterrupt(os::common::uint32_t esp) {
   if ((temp & 0x0800) == 0x0800)
     printf("AMD am79c973 Memory Error\n");
   if ((temp & 0x0400) == 0x0400)
-    printf("AMD am79c973 DATA RECIEVED\n");
+     Receive();
   if ((temp & 0x0200) == 0x0200)
     printf("AMD am79c973 DATA SENT\n");
 
@@ -151,7 +151,28 @@ void amd_am79c973::Send(common::uint8_t *buffer, common::uint32_t size) {
       0x8300F000 | ((uint16_t)((-size) & 0xFFF));
 
   registerAddressPort.Write(0);
-  registerDataPort.Write(0x40); // SEND_CMD
+  registerDataPort.Write(0x48); // SEND_CMD
 }
 
-void amd_am79c973::Receive() {}
+void amd_am79c973::Receive() {
+
+  printf("AMD am79c973 DATA RECIEVED\n");
+
+  for (; (recvBufferDescr[currentRecvBuffer].flags & 0x80000000) == 0; currentRecvBuffer = (currentRecvBuffer + 1) % 8) {
+     if (! (recvBufferDescr[currentRecvBuffer].flags & 0x40000000)  && (recvBufferDescr[currentRecvBuffer].flags & 0x03000000) == 0x03000000) {
+       uint32_t size = recvBufferDescr[currentRecvBuffer].flags & 0xFFF;
+       if (size > 64)
+       size -= 4;//eth2 frame size for CRC
+
+        uint8_t *buffer = (uint8_t *)(recvBufferDescr[currentRecvBuffer].address);
+
+        for (uint32_t i = 0; i < size; i++) {
+          printfHex(buffer[i]);
+          printf(" ");
+        }
+
+        recvBufferDescr[currentRecvBuffer].flags2 = 0;
+        recvBufferDescr[currentRecvBuffer].flags = 0x8000F7FF;
+     }
+  }
+}

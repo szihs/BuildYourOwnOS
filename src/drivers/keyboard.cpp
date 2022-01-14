@@ -17,7 +17,6 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager,
                                KeyboardEventHandler *hdl)
     : InterruptHandler(0x21, manager), handler(hdl), dataport(0x60),
       commandport(0x64) {
-  printf("Keyboard driver constructed\n");
 }
 KeyboardDriver::~KeyboardDriver() {}
 void KeyboardDriver::doActivate() {
