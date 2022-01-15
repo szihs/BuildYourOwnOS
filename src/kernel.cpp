@@ -12,6 +12,7 @@
 #include <hardwarecomm/pci.h>
 #include <memorymanagement.h>
 #include <multitasking.h>
+#include <syscalls.h>
 
 #define SCREEN_W 80
 #define SCREEN_H 25
@@ -120,7 +121,7 @@ public:
                             (VideoMem[80 * y + x] & 0x00FF));
   }
 };
-
+#if 0
 void taskA() {
   while (true)
     printf("Task A");
@@ -130,6 +131,23 @@ void taskB() {
   while (true)
     printf("Task B");
 }
+
+#else
+void sysprintf(const char *str) {
+  asm("int $0x80" : : "a" (4), "b" (str));
+}
+
+void taskA() {
+  while (true)
+    sysprintf("Task A");
+}
+
+void taskB() {
+  while (true)
+    sysprintf("Task B");
+}
+
+#endif
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
@@ -162,14 +180,13 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   printfHex(((size_t)allocated) & 0xFF);
   printf("\n");
 
-  /*
   Task task1(&gdt, taskA);
   Task task2(&gdt, taskB);
   taskManager.AddTask(&task1);
   taskManager.AddTask(&task2);
-  */
+  
   InterruptManager interrupts(&gdt, &taskManager);
-
+  SyscallHandler syscalls (0x80, &interrupts);
   DriverManager drvManager;
   printf("Init Stage : 1\n");
 

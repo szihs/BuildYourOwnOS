@@ -77,6 +77,8 @@ public:
   static void HandleInterruptRequest0x01();
   static void HandleInterruptRequest0x09();
   static void HandleInterruptRequest0x0C();
+  static void HandleInterruptRequest0x60();
+
 };
 
 } // namespace hardwarecomm

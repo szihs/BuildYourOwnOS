@@ -6,6 +6,7 @@ objects = obj/loader.o \
 		  obj/gdt.o \
 		  obj/multitasking.o \
 		  obj/memorymanagement.o \
+		  obj/syscalls.o \
 		  obj/drivers/driver.o \
 		  obj/hardwarecomm/port.o \
 		  obj/hardwarecomm/interruptstubs.o \
