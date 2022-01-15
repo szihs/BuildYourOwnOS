@@ -1,4 +1,6 @@
 #include <common/types.h>
+#include <drivers/amd_am79c973.h>
+#include <drivers/ata.h>
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
@@ -10,8 +12,6 @@
 #include <hardwarecomm/pci.h>
 #include <memorymanagement.h>
 #include <multitasking.h>
-#include <drivers/amd_am79c973.h>
-#include <drivers/ata.h>
 
 #define SCREEN_W 80
 #define SCREEN_H 25
@@ -209,23 +209,28 @@ extern "C" void kernelMain(void *multiboot_structure, uint32_t magicnumber) {
   // desktop.MouseEventHandler::OnMouseDown(0x0);
 #endif
 
-//interrupt 14
- AdvancedTechnologyAttachment ata0m(0x1F0, true);
- printf("ATA Primary Master: ");
- ata0m.Identify();
- AdvancedTechnologyAttachment ata0s(0x1F0, false);
- printf("ATA Primary Slave: ");
- ata0s.Identify();
- 
-//interrupt 15
- AdvancedTechnologyAttachment ata1m(0x170, true);
- AdvancedTechnologyAttachment ata1s(0x170, false);
+  // interrupt 14
+  AdvancedTechnologyAttachment ata0m(0x1F0, true);
+  printf("ATA Primary Master: ");
+  ata0m.Identify();
+  AdvancedTechnologyAttachment ata0s(0x1F0, false);
+  printf("ATA Primary Slave: ");
+  ata0s.Identify();
 
- //third : 0x1E8
- //fourth : 0x168
- 
-//  amd_am79c973 *eth0 = (amd_am79c973 *)drvManager.getDriver(2);
-//  eth0->Send((uint8_t *)"Hello Network", 13);
+  // interrupt 15
+  AdvancedTechnologyAttachment ata1m(0x170, true);
+  AdvancedTechnologyAttachment ata1s(0x170, false);
+
+  uint8_t atabuffer[25] = "Hello to Hard Disk\n";
+  ata0m.Write28(0, atabuffer, 19);
+  ata0m.Flush();
+
+  ata0m.Read28(0, atabuffer, 19);
+  // third : 0x1E8
+  // fourth : 0x168
+
+  //  amd_am79c973 *eth0 = (amd_am79c973 *)drvManager.getDriver(2);
+  //  eth0->Send((uint8_t *)"Hello Network", 13);
 
   interrupts.Activate();
   while (1) {

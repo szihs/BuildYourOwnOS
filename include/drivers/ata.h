@@ -25,7 +25,8 @@ public:
   ~AdvancedTechnologyAttachment();
 
   void Identify();
-  void Read28(common::uint32_t sector);
+  void Read28(common::uint32_t sector, common::uint8_t *data,
+              common::uint32_t count);
   void Write28(common::uint32_t sector, common::uint8_t *data,
                common::uint32_t count);
   void Flush();
